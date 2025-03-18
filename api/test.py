@@ -14,7 +14,7 @@ model = AutoModelForCausalLM.from_pretrained(
 )
 
 # CLI Loop
-print("\n🔵 Interactive CLI Mode: Type your prompt and press ENTER (or type 'exit' to quit)\n")
+print("\n Interactive CLI Mode: Type your prompt and press ENTER (or type 'exit' to quit)\n")
 while True:
     prompt = input(" Enter prompt: ")
     if prompt.lower() in ["exit", "quit"]:
@@ -26,7 +26,7 @@ while True:
         inputs = tokenizer(prompt, return_tensors="pt").to("cuda")
         output = model.generate(**inputs, max_length=200)
         response = tokenizer.decode(output[0], skip_special_tokens=True)
-        print(f"\n💡 AI Response: {response}\n")
+        print(f"\n AI Response: {response}\n")
     except Exception as e:
         print(f"\n Error: {str(e)}\n")
 
