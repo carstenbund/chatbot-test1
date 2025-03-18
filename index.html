@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbot</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        textarea { width: 80%; height: 100px; margin-bottom: 10px; }
+        button { padding: 10px 20px; font-size: 16px; }
+        .response { margin-top: 20px; font-weight: bold; text-align: left; max-width: 80%; margin: auto; }
+        .message { padding: 10px; border-radius: 5px; margin-bottom: 10px; }
+        .user { background-color: #d1e7fd; text-align: right; }
+        .ai { background-color: #f1f1f1; text-align: left; }
+    </style>
+</head>
+<body>
+    <h1>AI Chatbot</h1>
+    <textarea id="prompt" placeholder="Enter your message here..."></textarea>
+    <br>
+    <button onclick="sendMessage()">Send</button>
+    <div class="response" id="chatHistory"></div>
+
+    <script>
+        async function sendMessage() {
+            const prompt = document.getElementById("prompt").value;
+            const chatHistory = document.getElementById("chatHistory");
+
+            if (!prompt.trim()) return;  // Prevent empty messages
+
+            // Display user message
+            chatHistory.innerHTML += `<div class="message user"><strong>You:</strong> ${prompt}</div>`;
+            document.getElementById("prompt").value = "";  // Clear input
+
+            try {
+                const response = await fetch("http://192.168.1.23:8000/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: prompt, max_tokens: 200 })
+                });
+
+                if (!response.ok) throw new Error(`Error ${response.status}: ${response.statusText}`);
+
+                const data = await response.json();
+
+                // Display AI response
+                chatHistory.innerHTML += `<div class="message ai"><strong>AI:</strong> ${data.response}</div>`;
+
+                // Auto-scroll to the latest message
+                chatHistory.scrollTop = chatHistory.scrollHeight;
+            } catch (error) {
+                chatHistory.innerHTML += `<p style="color: red;">Error: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
