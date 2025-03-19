@@ -33,7 +33,7 @@
             document.getElementById("prompt").value = "";  // Clear input
 
             try {
-                const response = await fetch("http://192.168.1.23:8000/chat", {
+                const response = await fetch("http://localhost:8000/chat", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ message: prompt, max_tokens: 200 })
